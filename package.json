@@ -1,0 +1,30 @@
+{
+  "name": "BeeMon",
+  "version": "0.0.1",
+  "description": "BeeMon web interface",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.10.6",
+    "daemon": "~1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node beemon.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kyr0/BeeMon.git"
+  },
+  "keywords": [
+    "bee",
+    "hive",
+    "monitoring"
+  ],
+  "author": "Aron Homberg",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/kyr0/BeeMon/issues"
+  },
+  "homepage": "https://github.com/kyr0/BeeMon"
+}
