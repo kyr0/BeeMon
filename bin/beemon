@@ -23,6 +23,9 @@ function createWorker() {
             createWorker();
         });
     } else {
+
+        console.log('Starting child process...');
+
         // Run the HTTP server if running as worker
         require('../beemon');
     }
