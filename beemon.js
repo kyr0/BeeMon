@@ -2,12 +2,49 @@ var express = require('express'),
     app = express(),
     config = require('./config.json');
 
+// serve static files
 app.use(express.static(__dirname + '/public'));
 
+// GET /sensors
+// Delivers all sensor device descriptions together with
+// their latest and statistical data
 app.get('/sensors', function (req, res) {
-    res.send('TODO: Send latest sensors data');
+
+    res.json({
+        devices: {
+            temperature: [{
+                id: 's1',
+                name: 'Sensor 1',
+                type: 'TENPer1F',
+                deviation: 1
+            }, {
+                id: 's2',
+                name: 'Sensor 2',
+                type: 'TENPer1F-Pro',
+                deviation: 0.1
+            }],
+            weight: []
+        },
+        latest: {
+
+        },
+        stats: {
+
+        }
+    });
 });
 
+// GET /sensor/assign/:sensorId/:sensorName
+// Sets a name for a specific sensor id.
+// This name is returned in GET /sensors request.
+app.get('/sensor/assign/:sensorId/:sensorName', function (req, res) {
+
+    res.json({
+        success: true
+    });
+});
+
+// start listening
 var server = app.listen(config.port, function () {
 
     var host = server.address().address;

@@ -1,7 +1,7 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:300);
 
 * {
-    font-family: 'Open Sans', sans-serif !important;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .verticaltabs-container {
@@ -84,7 +84,27 @@
     font-size: 0.8em;
 }
 
+
+.currentValue .valueSubText button {
+    margin-bottom: 2px;
+}
+
 .row {
     margin-bottom: 90px;
     margin-top: 40px;
+}
+
+.badge {
+    padding: 5px 8px;
+}
+
+.sensorButtons {
+    color: #cc0000;
+    padding-top: 12px;
+    padding-right: 5px;
+    font-size: 1.4em;
+}
+
+.sensorButtons button {
+    margin-left: 5px !important;
 }
