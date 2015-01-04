@@ -1,0 +1,90 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300);
+
+* {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+.verticaltabs-container {
+    position: relative;
+    min-width: 460px;
+    min-height: 460px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.verticaltabs-container > .nav-tabs {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 100%;
+    width: 1000%;
+    -webkit-transform-origin: 0 0;
+    -moz-transform-origin: 0 0;
+    -ms-transform-origin: 0 0;
+    -o-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: translateX(-24px) rotate(90deg);
+    -moz-transform: translateX(-24px) rotate(90deg);
+    -ms-transform: translateX(-24px) rotate(90deg);
+    -o-transform: translateX(-24px) rotate(90deg);
+    transform: translateX(-24px) rotate(90deg);
+}
+
+.verticaltabs-container > .tab-content {
+    position: absolute;
+    top: 0;
+    right: 58px;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    height: auto;
+}
+
+.logo {
+    float: left;
+    margin-top: -5px;
+}
+
+.text-muted {
+    font-size: 0.6em;
+}
+
+.currentValue {
+    display: block;
+    border-radius: 200px;
+    height: 200px;
+    width: 200px;
+    text-align: center;
+    vertical-align: middle;
+    background-color: #eee;
+    margin-top: 33px;
+}
+
+.currentValue .valueLabel {
+    color: #555;
+    position: relative;
+    font-size: 1em;
+    padding-top: 40px;
+}
+
+.currentValue .valueText {
+    color: #999;
+    position: relative;
+    font-size: 2.8em;
+    font-weight: bold;
+    padding-top: 10px;
+}
+.currentValue .valueSubText {
+
+    padding-top: 10px;
+}
+
+.currentValue .valueSubText .badge {
+    font-size: 0.8em;
+}
+
+.row {
+    margin-bottom: 90px;
+    margin-top: 40px;
+}
