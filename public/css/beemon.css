@@ -1,7 +1,9 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300);
-
 * {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "PT Sans Narrow","Century Gothic","Apple Gothic",sans-serif;
+}
+
+footer a {
+    color: #c09100 !important;
 }
 
 .verticaltabs-container {
@@ -44,10 +46,13 @@
 .logo {
     float: left;
     margin-top: -5px;
+    margin-left: -12px;
+    margin-right: -12px;
 }
 
 .text-muted {
     font-size: 0.6em;
+    white-space: nowrap;
 }
 
 .currentValue {
@@ -66,6 +71,7 @@
     position: relative;
     font-size: 1em;
     padding-top: 40px;
+    font-weight: bold;
 }
 
 .currentValue .valueText {
@@ -99,12 +105,27 @@
 }
 
 .sensorButtons {
-    color: #cc0000;
-    padding-top: 12px;
+    color: #999;
+    padding-top: 8px;
     padding-right: 5px;
     font-size: 1.4em;
 }
 
 .sensorButtons button {
     margin-left: 5px !important;
+}
+
+footer {
+    background-color: #eee;
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-bottom: 10px;
+}
+
+h2 > img {
+    margin-right: 5px;
+}
+
+.chart {
+    color: #cc0000;
 }

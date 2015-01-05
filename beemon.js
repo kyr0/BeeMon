@@ -15,21 +15,19 @@ app.get('/sensors', function (req, res) {
             temperature: [{
                 id: 's1',
                 name: 'Sensor 1',
-                type: 'TENPer1F',
-                deviation: 1
+                deviceType: 'TEMPer1F',
+                deviation: 1,
+                latestValue: 34,
+                stats: []
             }, {
                 id: 's2',
                 name: 'Sensor 2',
-                type: 'TENPer1F-Pro',
-                deviation: 0.1
+                deviceType: 'TEMPer1F-Pro',
+                deviation: 0.1,
+                latestValue: 35.21,
+                stats: []
             }],
             weight: []
-        },
-        latest: {
-
-        },
-        stats: {
-
         }
     });
 });
