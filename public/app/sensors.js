@@ -19,6 +19,8 @@ Beemon.Sensors = {
 
     },
 
+    rendered: false,
+
     /**
      * Starts the sensor data fetching interval
      */
@@ -31,6 +33,164 @@ Beemon.Sensors = {
 
         // register click handler for sensor rename buttons
         $('.sensorNameButton').click(this.onRenameButtonClick);
+    },
+
+    /**
+     * Renders the highcharts initially
+     */
+    preRenderCharts: function (category) {
+
+        //console.log('preRenderCharts', category);
+
+        Highcharts.setOptions({
+            lang: {
+                // TODO: i18n
+                months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',  'Juli', 'August',
+                         'September', 'Oktober', 'November', 'Dezember'],
+                weekdays: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
+                decimalPoint: ',',
+                loading: 'Lade',
+                numericSymbols: [ "Tsd" , "Mio" , "Mrd" , "Bio" , "Bil" , "Tri"],
+                printChart: 'Drucken',
+                rangeSelectorFrom: 'Von',
+                rangeSelectorTo: 'Bis',
+                rangeSelectorZoom: 'Filter',
+                resetZoom: 'Zurück',
+                thousandsSep: '.',
+                downloadJPEG: 'Download JPG',
+                downloadPDF: 'Download PDF',
+                downloadPNG: 'Download PNG',
+                downloadSVG: 'Download SVG',
+                contextButtonTitle: 'Weiteres',
+                noData: 'Aktuell ist keine Historie bekannt.'
+
+            }
+        });
+
+        var chartBox = $('.container.' + category + ' .chart');
+
+        //console.log('chartBox', chartBox);
+
+        // Create the chart
+        chartBox.highcharts('StockChart', {
+
+            colors: ['#c09100', '#c09100', '#c09100', '#c09100', '#c09100', '#c09100', '#c09100'],
+
+            chart: {
+                zoomType: 'x',
+                height: 300,
+                borderColor: '#808080',
+                selectionMarkerFill: 'rgba(255, 218, 91, 0.44)'
+            },
+
+            rangeSelector : {
+                buttons: [{
+                    type: 'hour',
+                    count: 1,
+                    text: '1h'
+                }, {
+                    type: 'day',
+                    count: 1,
+                    text: '1d'
+                }, {
+                    type: 'month',
+                    count: 1,
+                    text: '1m'
+                }, {
+                    type: 'year',
+                    count: 1,
+                    text: '1y'
+                }, {
+                    type: 'all',
+                    text: 'All'
+                }],
+                inputEnabled: false, // it supports only days
+                selected : 4 // all
+            },
+
+            exporting: {
+                buttons: {
+                    contextButton: {
+                        theme: {
+                            'stroke-width': 0,
+                            r: 0,
+                            states: {
+                                hover: {
+                                    fill: '#fff'
+                                },
+                                select: {
+                                    stroke: '#fff',
+                                    fill: '#fff'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+
+            xAxis : {
+                minRange: 3600 * 1000 // one hour
+            },
+
+            yAxis: {
+                floor: 0,
+                /*title: {
+                    text: 'Temperature (°C)'
+                },
+                */
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+
+            tooltip: {
+                valueSuffix: this.getValueSuffixForCategory(category)
+            },
+
+            navigator: {
+                maskFill: 'rgba(255, 218, 91, 0.10)',
+                outlineColor: '#808080',
+                series: {
+                    color: 'rgba(100, 100, 100, 0.20)',
+                    dataGrouping: {
+                        smoothed: false
+                    },
+                    lineWidth: 2,
+                    lineColor: '#555'
+                }
+            },
+
+            scrollbar: {
+                barBackgroundColor: '#eee',
+                buttonBackgroundColor: '#eee'
+            },
+
+            series : [{
+                name: '',
+                data : [],
+                type: 'spline',
+                tooltip: {
+                    valueDecimals: 2
+                },
+                dataGrouping: {
+                    enabled: false
+                }
+            }]
+        });
+    },
+
+    getValueSuffixForCategory: function(category) {
+
+        switch (category) {
+
+            case 'temperature':
+                return ' °C';
+
+            case 'weight':
+                return ' kg';
+        }
     },
 
     /**
@@ -139,6 +299,11 @@ Beemon.Sensors = {
 
             // register click handler for each sensor button
             $('.container.' + categoryName + ' .sensorButtons button').click(this.onSensorButtonClick);
+
+            // first render cycle: prepare charts
+            if (!this.rendered) {
+                this.preRenderCharts(categoryName);
+            }
         }
 
         // 2. Update data by category
@@ -148,6 +313,13 @@ Beemon.Sensors = {
 
             this.renderSensorData(activeSensor, categoryName);
         }
+
+        // set flag
+        this.rendered = true;
+    },
+
+    getChartByCategory: function (category) {
+        return $('.container.' + category + ' .chart').highcharts();
     },
 
     /**
@@ -157,7 +329,8 @@ Beemon.Sensors = {
      */
     renderSensorData: function (sensor, category) {
 
-        var sensorRenameButton = $('.' + category + ' .sensorNameButton');
+        var sensorRenameButton = $('.' + category + ' .sensorNameButton'),
+            chart = this.getChartByCategory(category);
 
         // update sensor stats and latest value
         if (sensor) {
@@ -184,6 +357,9 @@ Beemon.Sensors = {
                 sensorRenameButton.removeClass('disabled');
             }
 
+            chart.series[0].name = sensor.name;
+            chart.series[0].setData(sensor.stats);
+
         } else {
 
             // update with empty data / message
@@ -200,6 +376,8 @@ Beemon.Sensors = {
             if (!sensorRenameButton.hasClass('disabled')) {
                 sensorRenameButton.addClass('disabled');
             }
+
+            chart.series[0].setData([]);
         }
     },
 
@@ -284,6 +462,13 @@ Beemon.Sensors = {
         var newActiveSensorElement = $('button[data-sensor-id=' + newActiveSensor.id + ']');
         newActiveSensorElement.addClass('active');
 
+        // reset any chart zoom
+        var chart = self.getChartByCategory(newActiveSensor.category);
+        chart.xAxis[0].setExtremes(
+            Date.UTC(1970, 0, 0),
+            Date.now()
+        );
+
         // render sensor data for category
         self.renderSensorData(newActiveSensor, newActiveSensor.category);
     },
@@ -294,11 +479,11 @@ Beemon.Sensors = {
      */
     onRenameButtonClick: function (clickEvent) {
 
-        console.log('onRenameButtonClick', clickEvent);
+        //console.log('onRenameButtonClick', clickEvent);
 
         var newSensorName = prompt('Neuer Sensor-Name:');
 
-        console.log('newSensorName', newSensorName);
+        //console.log('newSensorName', newSensorName);
 
     }
 };
