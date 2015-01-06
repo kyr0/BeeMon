@@ -47,6 +47,7 @@ Beemon.Sensors = {
                 // TODO: i18n
                 months: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',  'Juli', 'August',
                          'September', 'Oktober', 'November', 'Dezember'],
+                shortMonths: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',  'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'],
                 weekdays: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
                 decimalPoint: ',',
                 loading: 'Lade',
@@ -54,7 +55,7 @@ Beemon.Sensors = {
                 printChart: 'Drucken',
                 rangeSelectorFrom: 'Von',
                 rangeSelectorTo: 'Bis',
-                rangeSelectorZoom: 'Filter',
+                rangeSelectorZoom: 'Fokus:',
                 resetZoom: 'Zurück',
                 thousandsSep: '.',
                 downloadJPEG: 'Download JPG',
@@ -87,22 +88,22 @@ Beemon.Sensors = {
                 buttons: [{
                     type: 'hour',
                     count: 1,
-                    text: '1h'
+                    text: 'Stunde'
                 }, {
                     type: 'day',
                     count: 1,
-                    text: '1d'
+                    text: 'Tag'
                 }, {
                     type: 'month',
                     count: 1,
-                    text: '1m'
+                    text: 'Monat'
                 }, {
                     type: 'year',
                     count: 1,
-                    text: '1y'
+                    text: 'Jahr'
                 }, {
                     type: 'all',
-                    text: 'All'
+                    text: 'Alles'
                 }],
                 inputEnabled: false, // it supports only days
                 selected : 4 // all
@@ -146,7 +147,19 @@ Beemon.Sensors = {
             },
 
             tooltip: {
-                valueSuffix: this.getValueSuffixForCategory(category)
+                valueSuffix: this.getValueSuffixForCategory(category),
+
+                // TODO: Not applied?
+                dateTimeLabelFormats: {
+                    millisecond:"%A, %e. %b, %H:%M:%S.%L",
+                    second: "%A, %e. %b, %H:%M:%S",
+                    minute: "%A, %e. %b, %H:%M",
+                    hour: "%A, %e. %b, %H:%M",
+                    day: "%A, %e. %b %Y",
+                    week: "Woche vom %A, %e. %b, %Y",
+                    month: "%B %Y",
+                    year: "%Y"
+                }
             },
 
             navigator: {
