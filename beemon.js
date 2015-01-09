@@ -1,10 +1,10 @@
 var express = require('express'),
     app = express(),
     config = require('./config.json'),
-    DriverManager = require('./lib/DriverManager.js');
+    USBDeviceManager = require('./lib/USBDeviceManager.js');
 
-// Initialize device driver management
-DriverManager.init();
+// Initialize USB device management
+USBDeviceManager.init();
 
 // serve static files
 app.use(express.static(__dirname + '/public'));
