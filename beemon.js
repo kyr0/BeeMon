@@ -1,6 +1,28 @@
 var express = require('express'),
     app = express(),
-    config = require('./config.json');
+    config = require('./config.json'),
+    udev = require('udev'),
+    usbMonitor = udev.monitor();
+
+// handle sensor/actor add
+usbMonitor.on('add', function (device) {
+
+    console.log('sensor/actor added ', device);
+
+    //usbMonitor.close();
+});
+
+// handle sensor/actor remove
+usbMonitor.on('remove', function (device) {
+
+    console.log('sensor/actor removed ', device);
+});
+
+// handle sensor/actor change
+usbMonitor.on('change', function (device) {
+
+    console.log('sensor/actor changed ', device);
+});
 
 // serve static files
 app.use(express.static(__dirname + '/public'));
