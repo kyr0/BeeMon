@@ -357,7 +357,7 @@ Beemon.Sensors = {
         // update sensor stats and latest value
         if (sensor) {
 
-            console.log('Render data for: ', sensor, category);
+            console.log('Render data for: ', sensor, sensor.latestValue, category);
 
             $('.' + category + ' .currentValueBox').html(
                 this.renderNumber(sensor.latestValue)
@@ -368,11 +368,11 @@ Beemon.Sensors = {
             );
 
             $('.' + category + ' .deviceTypeValueBox').html(
-                this.renderNumber(sensor.deviceType)
+                sensor.deviceType
             );
 
             $('.' + category + ' .sensorNameBox').html(
-                this.renderNumber(sensor.name)
+                sensor.name
             );
 
             if (sensorRenameButton.hasClass('disabled')) {
