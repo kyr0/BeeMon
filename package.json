@@ -6,7 +6,8 @@
   "dependencies": {
     "express": "^4.10.6",
     "daemon": "~1.1.0",
-    "udev": "~0.1.0"
+    "udev": "~0.1.0",
+    "node-hid": "~0.3.2"
   },
   "devDependencies": {},
   "scripts": {
