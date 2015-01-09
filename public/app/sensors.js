@@ -336,6 +336,15 @@ Beemon.Sensors = {
     },
 
     /**
+     * Returns a number rounded to 2nd decimal place
+     * @param {Number} number
+     * @return {Number}
+     */
+    round2: function(number) {
+        return Math.round(number * 100) / 100;
+    },
+
+    /**
      * Renders sensor data for a specific sensor
      * @param sensor
      * @param category
@@ -348,7 +357,7 @@ Beemon.Sensors = {
         // update sensor stats and latest value
         if (sensor) {
 
-            //console.log('Render data for: ', sensor, category);
+            console.log('Render data for: ', sensor, category);
 
             $('.' + category + ' .currentValueBox').html(
                 this.renderNumber(sensor.latestValue)
@@ -397,7 +406,7 @@ Beemon.Sensors = {
     renderNumber: function(sensorValue) {
 
         // TODO: Localized number rendering, currently de_DE only.
-        return String(sensorValue).replace('.', ',');
+        return String(this.round2(sensorValue)).replace('.', ',');
     },
 
     /**
