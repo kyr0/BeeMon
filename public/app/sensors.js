@@ -231,19 +231,27 @@ Beemon.Sensors = {
             sensorDevice,
             sensorCategoryUnknown;
 
+        console.log('updateModel', sensorData);
+
         // 0. update client-side model of sensors
         for (var categoryName in sensorData.devices) {
 
+
+
             sensorCategoryUnknown = false;
+
+            // fetch all devices of this category
             sensorDevices = sensorData.devices[categoryName];
 
+            // set flag for if the category was unknown before
             if (!this.sensorCategories[categoryName]) {
-
                 sensorCategoryUnknown = true;
-
-                this.sensorCategories[categoryName] = sensorData.devices[categoryName];
             }
 
+            // update category indexed device map configuration and data
+            this.sensorCategories[categoryName] = sensorDevices;
+
+            // walk each sensor device and update it's model attributes
             for (var i=0; i<sensorDevices.length; i++) {
 
                 sensorDevice = sensorDevices[i];
@@ -251,15 +259,32 @@ Beemon.Sensors = {
                 // merge category field with sensor object for shortcut-lookup in 2.
                 sensorDevice.category = categoryName;
 
-                if (!this.sensors[sensorDevice.id]) {
-                    this.sensors[sensorDevice.id] = sensorDevice;
-                }
+                // update cached sensors map
+                this.sensors[sensorDevice.id] = sensorDevice;
 
                 // auto-activate the first sensor in category
                 // if the category was unknown before
                 if (sensorCategoryUnknown && i==0) {
+
                     this.activated[sensorDevice.id] = sensorDevice;
+
                     sensorCategoryUnknown = false;
+                }
+            }
+        }
+
+        // 1. update cached activated sensors map
+        for (var activatedSensorId in this.activated) {
+
+            if (this.activated.hasOwnProperty(activatedSensorId)) {
+
+                for (var sensorId in this.sensors) {
+
+                    if (this.sensors.hasOwnProperty(sensorId) &&
+                        activatedSensorId == sensorId) {
+
+                        this.activated[activatedSensorId] = this.sensors[sensorId];
+                    }
                 }
             }
         }
@@ -275,56 +300,67 @@ Beemon.Sensors = {
             sensorDevice,
             categorySensorButtonToolbar,
             sensorButtonsMarkup,
-            sensorActive;
+            sensorActive,
+            categoryName;
+
+        console.log('Render data of all sensors: ', sensorData);
 
         // 1. create/update UI for each category
-        for (var categoryName in sensorData.devices) {
+        for (categoryName in sensorData.devices) {
 
-            sensorDevices = sensorData.devices[categoryName];
-            categorySensorButtonToolbar = $('.container.' + categoryName + ' .sensorButtons');
-            sensorButtonsMarkup = '';
+            if (sensorData.devices.hasOwnProperty(categoryName)) {
 
-            if (sensorDevices.length && sensorDevices.length > 0) {
+                sensorDevices = sensorData.devices[categoryName];
+                categorySensorButtonToolbar = $('.container.' + categoryName + ' .sensorButtons');
+                sensorButtonsMarkup = '';
 
-                for (var i=0; i<sensorDevices.length; i++) {
+                if (sensorDevices.length && sensorDevices.length > 0) {
 
-                    sensorDevice = sensorDevices[i];
-                    sensorActive = '';
+                    for (var i=0; i<sensorDevices.length; i++) {
 
-                    if (this.isActive(sensorDevice.id)) {
-                        sensorActive = 'active';
+                        sensorDevice = sensorDevices[i];
+                        sensorActive = '';
+
+                        if (this.isActive(sensorDevice.id)) {
+                            sensorActive = 'active';
+                        }
+
+                        // add the sensor buttons elements
+                        sensorButtonsMarkup += '<button type="button" class="btn btn-default btn-xs ' + sensorActive + '" '
+                        +         'data-sensor-id="' + sensorDevice.id + '">'
+                        +     sensorDevice.name
+                        + '</button>'
                     }
 
-                    // add the sensor buttons elements
-                    sensorButtonsMarkup += '<button type="button" class="btn btn-default btn-xs ' + sensorActive + '" '
-                    +         'data-sensor-id="' + sensorDevice.id + '">'
-                    +     sensorDevice.name
-                    + '</button>'
+                    // update sensor button markup
+                    categorySensorButtonToolbar.html(sensorButtonsMarkup);
+
+                } else {
+
+                    categorySensorButtonToolbar.html('&ndash; ohne Sensoren &ndash;');
                 }
 
-                // update sensor button markup
-                categorySensorButtonToolbar.html(sensorButtonsMarkup);
+                // register click handler for each sensor button
+                $('.container.' + categoryName + ' .sensorButtons button').click(this.onSensorButtonClick);
 
-            } else {
-
-                categorySensorButtonToolbar.html('&ndash; ohne Sensoren &ndash;');
-            }
-
-            // register click handler for each sensor button
-            $('.container.' + categoryName + ' .sensorButtons button').click(this.onSensorButtonClick);
-
-            // first render cycle: prepare charts
-            if (!this.rendered) {
-                this.preRenderCharts(categoryName);
+                // first render cycle: prepare charts
+                if (!this.rendered) {
+                    this.preRenderCharts(categoryName);
+                }
             }
         }
 
         // 2. Update data by category
-        for (var categoryName in sensorData.devices) {
+        for (categoryName in sensorData.devices) {
 
-            var activeSensor = this.getActiveSensorInCategory(categoryName);
+            if (sensorData.devices.hasOwnProperty(categoryName)) {
 
-            this.renderSensorData(activeSensor, categoryName);
+                var activeSensor = this.getActiveSensorInCategory(categoryName);
+
+                console.log('Update data of currently activated sensor: ', activeSensor);
+
+                this.renderSensorData(activeSensor, categoryName);
+            }
         }
 
         // set flag
@@ -436,8 +472,10 @@ Beemon.Sensors = {
      */
     getActiveSensorInCategory: function (categoryName) {
 
-        var sensor = null;
-        for (var sensorId in this.activated) {
+        var sensor = null,
+            sensorId;
+
+        for (sensorId in this.activated) {
 
             if (this.activated.hasOwnProperty(sensorId) &&
                 this.isActive(sensorId) &&
